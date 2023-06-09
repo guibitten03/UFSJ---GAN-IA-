@@ -7,7 +7,7 @@ class Configuration():
                  g_output_size:int=784,
                  g_hidden_size:int=256):
         
-        # Discriminator hyperparams ---------------------
+        # Discriminator Hiperparãmetros ---------------------
 
         # Size of input image to discriminator (28*28)
         self.input_size = input_size
@@ -16,7 +16,7 @@ class Configuration():
         # Size of last hidden layer in the discriminator
         self.d_hidden_size = d_hidden_size
 
-        # Generator hyperparams -------------------------
+        # Generator Hiperparametros -------------------------
 
         # Size of latent vector to give to generator
         self.z_size = z_size

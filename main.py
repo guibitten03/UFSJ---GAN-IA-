@@ -8,6 +8,7 @@ import torch
 import torch.optim as optim
 import numpy as np
 import pickle as pkl
+import matplotlib.pyplot as plt
 
 
 
@@ -102,7 +103,31 @@ def train(opt, data_loader, D, G, d_optimizer, g_optimizer):
     # Save training generator samples
     with open('checkpoints/train_samples.pkl', 'wb') as f:
         pkl.dump(samples, f)
+        
+        
+def test(opt, G, save_path):
+    # randomly generated, new latent vectors
+    sample_size=16
+    rand_z = np.random.uniform(-1, 1, size=(sample_size, opt.z_size))
+    rand_z = torch.from_numpy(rand_z).float()
+
+    G.eval() # eval mode
+    # generated samples
+    rand_images = G(rand_z)
     
+    with open('checkpoints/train_samples.pkl', 'rb') as f:
+        samples = pkl.load(f)
+    
+    def view_samples(epoch, samples):
+        fig, axes = plt.subplots(figsize=(7,7), nrows=4, ncols=4, sharey=True, sharex=True)
+        for ax, img in zip(axes.flatten(), samples[epoch]):
+            img = img.detach()
+            ax.xaxis.set_visible(False)
+            ax.yaxis.set_visible(False)
+            im = ax.imshow(img.reshape((28,28)), cmap='Greys_r')
+    
+    view_samples(0, [rand_images])
+    plt.savefig(save_path)
     
 
 
@@ -127,3 +152,4 @@ if __name__ == "__main__":
     g_optimizer = optim.Adam(G.parameters(),  lr=0.0002, weight_decay=0.00001)
     
     train(opt, data.dataset_loader, D, G, d_optimizer, g_optimizer)
+    test(opt, G, "results/output_100e.png")

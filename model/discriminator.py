@@ -6,24 +6,24 @@ class Discriminator(nn.Module):
     def __init__(self, input_size, hidden_dim, output_size):
         super(Discriminator, self).__init__()
         
-        # define hidden linear layers
+        # Camadas Hidden
         self.fc1 = nn.Linear(input_size, hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, hidden_dim)
         self.fc3 = nn.Linear(hidden_dim, hidden_dim)
         self.fc4 = nn.Linear(hidden_dim, hidden_dim)
         self.fc5 = nn.Linear(hidden_dim, hidden_dim)
         
-        # final fully-connected layer
+        # Camadas totalmente conectadas
         self.fc6 = nn.Linear(hidden_dim, output_size)
         
-        # dropout layer 
+        # Camada de Dropout
         self.dropout = nn.Dropout(0.3)
         
         
     def forward(self, x):
-        # flatten image
+        # Achatando a imagem
         x = x.view(-1, 28*28)
-        # all hidden layers
+        
         x = F.leaky_relu(self.fc1(x), 0.2) # (input, negative_slope=0.2)
         x = self.dropout(x)
         x = F.leaky_relu(self.fc2(x), 0.2)
@@ -34,7 +34,8 @@ class Discriminator(nn.Module):
         x = self.dropout(x)
         x = F.leaky_relu(self.fc5(x), 0.2)
         x = self.dropout(x)
-        # final layer
+        
+        # Camada Final
         out = self.fc6(x)
 
         return out
